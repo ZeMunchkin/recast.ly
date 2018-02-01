@@ -8,20 +8,43 @@ class App extends React.Component {
     console.log('our videos', this.state.videos);
   }
   
-  handleClick (event, video) {
-    console.log('I was clicked!');
-    //retrieve which video key was clicked
+  handleClick (video) {
     //update our state.video with this.setState()
-    this.setState({video: video});
     //pass in the selected video
+    this.setState({video: video});
+  }
+  
+  searchYouTube (query) {
+    var app = this;
+    $.ajax ({
+      url: 'https://www.googleapis.com/youtube/v3/search',
+      type: 'GET',
+      data: {
+        'q': query,
+        'maxResults': 5,
+        'part': 'snippet',
+        'videoEmbeddable': true,
+        'type': 'video',
+        'key': window.YOUTUBE_API_KEY,
+      },
+      success: function (data) {
+        console.log('Success! Here is the data: ', data);
+        app.setState({videos: data.items});
+        app.setState({video: data.items[0]});
+      },
+      error: function (data) {
+        console.log('Error! ', data);
+      }
+    });
   }
   
   render () {
+    console.log('our current videos state: ', this.state.videos);
     return (
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <div><Search /></div>
+            <div><Search searchFunc={this.searchYouTube.bind(this)}/></div>
           </div>
         </nav>
         <div className="row">
@@ -29,7 +52,7 @@ class App extends React.Component {
             <div><VideoPlayer video={this.state.video}/></div>
           </div>
           <div className="col-md-5">
-            <div><VideoList videos={this.state.videos}/></div>
+            <div><VideoList clickFunc={this.handleClick.bind(this)} videos={this.state.videos}/></div>
           </div>
         </div>
       </div>
