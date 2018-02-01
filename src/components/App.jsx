@@ -8,6 +8,14 @@ class App extends React.Component {
     console.log('our videos', this.state.videos);
   }
   
+  handleClick (event, video) {
+    console.log('I was clicked!');
+    //retrieve which video key was clicked
+    //update our state.video with this.setState()
+    this.setState({video: video});
+    //pass in the selected video
+  }
+  
   render () {
     return (
       <div>
