@@ -5,7 +5,14 @@ class App extends React.Component {
       videos: exampleVideoData,
       video: exampleVideoData[0],
     };
+    
+    // this.searchYouTube('dog');
+    
     console.log('our videos', this.state.videos);
+  }
+  
+  componentDidMount () {
+    this.searchYouTube('dog');
   }
   
   handleClick (video) {
