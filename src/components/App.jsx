@@ -5,12 +5,17 @@ class App extends React.Component {
       videos: exampleVideoData,
       video: exampleVideoData[0],
     };
+    
+    // this.searchYouTube('dog');
+    
     console.log('our videos', this.state.videos);
   }
   
-  handleClick (event, video) {
-    console.log('I was clicked!');
-    //retrieve which video key was clicked
+  componentDidMount () {
+    this.searchYouTube('dog');
+  }
+  
+  handleClick (video) {
     //update our state.video with this.setState()
     this.setState({video: video});
     //pass in the selected video
