@@ -22,10 +22,6 @@ var searchYouTube = (options, callback) => {
 
 window.searchYouTube = searchYouTube;
 
+var debouncedSYT = _.debounce(searchYouTube, 500);
 
-//var options = {
-  // query: query,
-  // max: number,
-  // key: API key,
-  
-//}
+window.debouncedSYT = debouncedSYT;

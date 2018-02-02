@@ -2,42 +2,39 @@ class App extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      videos: exampleVideoData,
+      videos: [],
       video: exampleVideoData[0],
       search: 'dog',
     };
     
-    console.log('our videos', this.state.videos);
+    // console.log('our videos', this.state.videos);
     this.handleYouTube = this.handleYouTube.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
   }
 
   componentDidMount () {
+    //debugger;
     var options = {
-      query: this.state.search,
+      query: 'dog',
       max: 5,
       key: window.YOUTUBE_API_KEY,
     };
-    searchYouTube(options, this.handleYouTube);
+    this.props.searchYouTube(options, this.handleYouTube);
   }
   
   handleClick (video) {
-    //update our state.video with this.setState()
     this.setState({video: video});
-    //pass in the selected video
   }
   
   handleYouTube (data) {
-    //debugger;
-    console.log('Init!');
     this.setState({videos: data});
     this.setState({video: data[0]});
   }
   
   handleSearch (input) {
-    this.setState({search: input});
-    searchYouTube({
+    //this.setState({search: input});
+    this.props.searchYouTube({
       query: input,
       max: 5,
       key: window.YOUTUBE_API_KEY,
