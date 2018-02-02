@@ -4,19 +4,22 @@ class App extends React.Component {
     this.state = {
       videos: exampleVideoData,
       video: exampleVideoData[0],
+      search: 'dog',
     };
     
-    // this.searchYouTube('dog');
-    
     console.log('our videos', this.state.videos);
+    this.handleYouTube = this.handleYouTube.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   componentDidMount () {
-    this.searchYouTube('dog');
-  }
-  
-  componentDidMount () {
-    this.searchYouTube('dog');
+    var options = {
+      query: this.state.search,
+      max: 5,
+      key: window.YOUTUBE_API_KEY,
+    };
+    searchYouTube(options, this.handleYouTube);
   }
   
   handleClick (video) {
@@ -24,38 +27,30 @@ class App extends React.Component {
     this.setState({video: video});
     //pass in the selected video
   }
-
-  searchYouTube (query) {
-    var app = this;
-    $.ajax({
-      url: 'https://www.googleapis.com/youtube/v3/search',
-      type: 'GET',
-      data: {
-        'q': query,
-        'maxResults': 5,
-        'part': 'snippet',
-        'videoEmbeddable': true,
-        'type': 'video',
-        'key': window.YOUTUBE_API_KEY,
-      },
-      success: function (data) {
-        console.log('Success! Here is the data: ', data);
-        app.setState({videos: data.items});
-        app.setState({video: data.items[0]});
-      },
-      error: function (data) {
-        console.log('Error! ', data);
-      }
-    });
+  
+  handleYouTube (data) {
+    //debugger;
+    console.log('Init!');
+    this.setState({videos: data});
+    this.setState({video: data[0]});
+  }
+  
+  handleSearch (input) {
+    this.setState({search: input});
+    searchYouTube({
+      query: input,
+      max: 5,
+      key: window.YOUTUBE_API_KEY,
+    }, this.handleYouTube);
   }
   
   render () {
-    console.log( 'this.handleClick: ', this.handleClick );
+    
     return (
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <div><Search searchFunc={this.searchYouTube.bind(this)}/></div>
+            <div><Search searchFunc={this.handleSearch} youTubeFunc={this.handleYouTube}/></div>
           </div>
         </nav>
         <div className="row">
@@ -66,7 +61,7 @@ class App extends React.Component {
             <div>
               <VideoList 
                 videos={ this.state.videos } 
-                clickFunc={ this.handleClick.bind(this) }/>
+                clickFunc={ this.handleClick }/>
             </div>
           </div>
         </div>
